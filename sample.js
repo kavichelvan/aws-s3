@@ -22,9 +22,16 @@ var uuid = require('node-uuid');
 var s3 = new AWS.S3();
 
 // Create a bucket and upload something into it
-var bucketName = 'node-sdk-sample-' + uuid.v4();
+var bucketName = 'node-sdk-sample-aws-kavi-' + uuid.v4();
 var keyName = 'hello_world.txt';
-
+AWS.config.getCredentials(function(err) {
+  if (err) console.log(err.stack);
+  // credentials not loaded
+  else {
+    console.log("Access key:", AWS.config.credentials.accessKeyId);
+    //console.log("Secret access key:", AWS.config.credentials.secretAccessKey);
+  }
+});
 s3.createBucket({Bucket: bucketName}, function() {
   var params = {Bucket: bucketName, Key: keyName, Body: 'Hello World!'};
   s3.putObject(params, function(err, data) {
